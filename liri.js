@@ -51,3 +51,6 @@ if (process.argv[2] === "concert-this") {
 } else {
     console.log("Argument \" " + process.argv[2] + "\" not recognized.");
 }
+/*
+bandsintown notes check out JSON.parse(body)
+*/
