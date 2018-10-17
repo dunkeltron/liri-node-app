@@ -20,22 +20,22 @@ function inputManager(str, str2) {
         movieThis(str2);
     }
     else if (str === "do-what-it-says") {
-        console.log("time to log");
-        var inputArr =  fs.readFileSync('random.txt').toString().split('\n');
-        var argsArr=[];
-        var termsArr=[];
-        inputArr.forEach(function (line) {
-            console.log(line);
-            inputManager(line.split(",")[0],line.split(",")[1]);
-        });
+        try{
+            fs.readFileSync('random.txt').toString().split('\n').forEach(function (line) {
+                inputManager(line.split(",")[0], line.split(",")[1]);
+            });
+        }
+        catch(err){
+            console.log("random.txt File not Found");
+        }
 
     } else {
         console.log("Argument \" " + str + "\" not recognized.");
     }
 }
 function spotifyThis(str) {
-    
-    str= removeQuotes(str);
+
+    str = removeQuotes(str);
     spotify.search({ type: 'track', query: str, limit: 1 }, function (err, data) {
         if (err) {
             return console.log("An error occurred. error code:" + err);
@@ -63,7 +63,7 @@ function spotifyThis(str) {
 }
 function movieThis(str) {
 
-    str= removeQuotes(str);
+    str = removeQuotes(str);
     var query = "https://www.omdbapi.com/?apikey=" + keys.omdb.id + "&t=";
     if (str == undefined || str == "") {
         query += "mr nobody";
@@ -77,20 +77,26 @@ function movieThis(str) {
             return console.error(err);
         }
         var parsedBody = JSON.parse(body);
-        console.log("Title: " + parsedBody.Title);
-        console.log("Year: " + parsedBody.Year);
-        console.log("IMDB rating: " + parsedBody.Ratings[0].Value);   //imdb
-        console.log("Rotten Tomatoes rating: " + parsedBody.Ratings[1].Value);   //rotten tomatoes
-        console.log("Production Countries: " + parsedBody.Country);
-        console.log("Language: " + parsedBody.Language);
-        console.log("Plot: " + parsedBody.Plot);
-        console.log("Notable Actors: " + parsedBody.Actors);
-        console.log();  //empty line for clarity with multiple liri requests
-    })
+        if (parsedBody.Title != undefined) {
+            console.log("Title: " + parsedBody.Title);
+            console.log("Year: " + parsedBody.Year);
+            console.log("IMDB rating: " + parsedBody.Ratings[0].Value);   //imdb
+            console.log("Rotten Tomatoes rating: " + parsedBody.Ratings[1].Value);   //rotten tomatoes
+            console.log("Production Countries: " + parsedBody.Country);
+            console.log("Language: " + parsedBody.Language);
+            console.log("Plot: " + parsedBody.Plot);
+            console.log("Notable Actors: " + parsedBody.Actors);
+            console.log();  //empty line for clarity with multiple liri requests
+        }
+        else {
+            console.log("Couldn't find a movie with that title.");
+        }
+    });
+
 
 }
 function concertThis(str) {
-    str= removeQuotes(str);
+    str = removeQuotes(str);
     if (str == undefined || str == "") {
         return console.log("No artist search term given.");
     }
@@ -98,32 +104,43 @@ function concertThis(str) {
         var artist = str;
         request("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp", function (error, response, body) {
 
-             if (body.split("=")[0] == "{error" || body.split("=")[0] == "{warn") {
-                 return console.log("Error: Results not found for " + artist);
-             }
+            if (body.split("=")[0] == "{error" || body.split("=")[0] == "{warn") {
+                return console.log("Error: Results not found for " + artist);
+            }
             else {
-                console.log("Upcoming concerts for " + str);
                 var data = JSON.parse(body);
-                console.log(error);
-                data.forEach(element => {
-                    console.log();
-                    console.log("Venue: " + (element.venue.name));
-                    console.log("City: " + element.venue.city);
-                    console.log("Date: " + moment(element.datetime).format("MM-DD-YYYY"));
-                })
+                if (data.length != 0) {
+                    console.log("Upcoming concerts for " + str);
+                    data.forEach(element => {
+                        console.log();
+                        console.log("Venue: " + (element.venue.name));
+                        console.log("City: " + element.venue.city);
+                        console.log("Date: " + moment(element.datetime).format("MM-DD-YYYY"));
+                    });
+
+                }
+                else {
+                    console.log("Couldn't find any upcoming concerts for " + str);
+                }
             }
         });
     }
 }
 function removeQuotes(str) {
     var returnStr = "";
-    for (i = 0; i < str.length; i++) {
-        if (str[i] === "\"") {
+    if (str != undefined) {
+        for (i = 0; i < str.length; i++) {
+            if (str[i] === "\"") {
+            }
+            else {
+                returnStr += str[i];
+            }
         }
-        else {
-            returnStr += str[i];
-        }
+    }
+    else {
+        return str
     }
     return returnStr;
 }
+
 inputManager(process.argv[2], process.argv[3]);
