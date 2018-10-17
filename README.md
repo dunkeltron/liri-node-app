@@ -20,12 +20,17 @@ SPOTIFY_SECRET=your-spotify-secret
 * The program uses the command line to take in arguments from the user. There are four accepted commands. 
 
     1. concert-this "Band Name" , this command uses the bandsintown events api to find and return any upcoming shows that "Band Name" may have.
+    * The function displays the list of the bands upcoming shows acording to the bandsintown api.
+    * For each show the function will output:
+        1. The venue name
+        1. the city and state (or city and country if city not in U.S.)
+        1. the date of the concert in (MM/DD/YYY format).
 
     1. spotify-this-song "Song Name" , this command uses the node-spotify-api node package to search spotify for the desired song. This command will return the first result found by the api call only. 
         * The function displays:
             1. Song Name.
-            2. Album the song is on.
-            3. Artist(s)
+            1. Album the song is on.
+            1. Artist(s)
         * If the user is searching for a more niche artist being as specific as possible should help return the desired result. 
 
     1. movie-this "Movie Title" , this command uses searches omdb for "Movie Title". If the api call gets a result the program wil output the following information.
@@ -34,7 +39,7 @@ SPOTIFY_SECRET=your-spotify-secret
         1. IMDB rating.
         1. Rotten Tomatoes rating.
         1. Countries the movie was produced in.
-        1. Original anguage of the movie.
+        1. Original language of the movie.
         1. The plot.
         1. List of notable actors in the movie.
     
