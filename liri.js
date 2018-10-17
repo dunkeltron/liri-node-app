@@ -5,13 +5,11 @@ var fs = require("fs");
 const cols = 8;
 var moment = require("moment");
 
-// var Spotify = require("node-spotify-api");
-// var spotify = new Spotify(keys.spotify);
+ var Spotify = require("node-spotify-api");
+ var spotify = new Spotify(keys.spotify);
 function inputManager(str, str2) {
     if (str === "concert-this") {
         concertThis(str2);
-
-
     }
     else if (str === "spotify-this-song") {
         spotifyThis(str2);
@@ -34,7 +32,9 @@ function inputManager(str, str2) {
     }
 }
 function spotifyThis(str) {
-
+    if(str==undefined){
+        return console.log("No search term supplied.");
+    }
     str = removeQuotes(str);
     spotify.search({ type: 'track', query: str, limit: 1 }, function (err, data) {
         if (err) {
