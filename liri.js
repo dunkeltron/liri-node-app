@@ -1,91 +1,129 @@
 var dot = require("dotenv").config();
-var Spotify = require("node-spotify-api");
 var keys = require('./keys');
 var request = require("request");
 var fs = require("fs");
+const cols = 8;
 var moment = require("moment");
-var spotify = new Spotify(keys.spotify);
 
-if (process.argv[2] === "concert-this") {
-    if (process.argv[3] == undefined || process.argv[3] == "") {
-        return Console.log("No artist search term given.");
+// var Spotify = require("node-spotify-api");
+// var spotify = new Spotify(keys.spotify);
+function inputManager(str, str2) {
+    if (str === "concert-this") {
+        concertThis(str2);
+
+
+    }
+    else if (str === "spotify-this-song") {
+        spotifyThis(str2);
+    }
+    else if (str === "movie-this") {
+        movieThis(str2);
+    }
+    else if (str === "do-what-it-says") {
+        console.log("time to log");
+        var inputArr =  fs.readFileSync('random.txt').toString().split('\n');
+        var argsArr=[];
+        var termsArr=[];
+        inputArr.forEach(function (line) {
+            console.log(line);
+            inputManager(line.split(",")[0],line.split(",")[1]);
+        });
+
+    } else {
+        console.log("Argument \" " + str + "\" not recognized.");
+    }
+}
+function spotifyThis(str) {
+    
+    str= removeQuotes(str);
+    spotify.search({ type: 'track', query: str, limit: 1 }, function (err, data) {
+        if (err) {
+            return console.log("An error occurred. error code:" + err);
+        }
+        //data.tracks.items is the array of search hits from the API. We only use the first response in this case
+        var song = data.tracks.items[0];
+
+        //track name
+        console.log("Track Name:    " + song.name);
+        //album name of the track
+        console.log("Album Name:    " + song.album.name);
+        //print artists
+        var artistArr = song.artists;
+        console.log("Artist(s): ");
+        artistArr.forEach(element => {
+            console.log("    " + element.name);
+        });
+        if (song.preview_url) {
+            console.log("Preview Link:    " + song.preview_url);
+        }
+        else {
+            console.log("Preview URL not available for this song.");
+        }
+    });
+}
+function movieThis(str) {
+
+    str= removeQuotes(str);
+    var query = "https://www.omdbapi.com/?apikey=" + keys.omdb.id + "&t=";
+    if (str == undefined || str == "") {
+        query += "mr nobody";
+    }
+
+    else {
+        query += str;
+    }
+    request(query, function (err, response, body) {
+        if (err) {
+            return console.error(err);
+        }
+        var parsedBody = JSON.parse(body);
+        console.log("Title: " + parsedBody.Title);
+        console.log("Year: " + parsedBody.Year);
+        console.log("IMDB rating: " + parsedBody.Ratings[0].Value);   //imdb
+        console.log("Rotten Tomatoes rating: " + parsedBody.Ratings[1].Value);   //rotten tomatoes
+        console.log("Production Countries: " + parsedBody.Country);
+        console.log("Language: " + parsedBody.Language);
+        console.log("Plot: " + parsedBody.Plot);
+        console.log("Notable Actors: " + parsedBody.Actors);
+        console.log();  //empty line for clarity with multiple liri requests
+    })
+
+}
+function concertThis(str) {
+    str= removeQuotes(str);
+    if (str == undefined || str == "") {
+        return console.log("No artist search term given.");
     }
     else {
-        console.log("Upcoming concerts for "+ process.argv[3]);
-        var artist = process.argv[3];
+        var artist = str;
         request("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp", function (error, response, body) {
-            if (body == "{error=Not Found}\n" || body == "{warn=Not found}\n") {
-                return console.log("Error: Results not found for " + artist);
-            }
+
+             if (body.split("=")[0] == "{error" || body.split("=")[0] == "{warn") {
+                 return console.log("Error: Results not found for " + artist);
+             }
             else {
+                console.log("Upcoming concerts for " + str);
                 var data = JSON.parse(body);
+                console.log(error);
                 data.forEach(element => {
                     console.log();
                     console.log("Venue: " + (element.venue.name));
                     console.log("City: " + element.venue.city);
                     console.log("Date: " + moment(element.datetime).format("MM-DD-YYYY"));
                 })
-    
             }
         });
     }
-   
 }
-else if (process.argv[2] === "spotify-this-song") {
-    spotify.search({ type: 'track', query: process.argv[3], limit: 1 }, function (err, data) {
-        if (err) {
-            return console.log("An error occurred. error code:" + err);
+function removeQuotes(str) {
+    var returnStr = "";
+    for (i = 0; i < str.length; i++) {
+        if (str[i] === "\"") {
         }
-        //console.log(data.tracks.items);
-        //data.tacks.items is the array of search hits from the API. We only use the first response in this case
-        var song=data.tracks.items[0];
-        
-        //track name
-        console.log("Track Name:    "+song.name);
-        //album name of the track
-        console.log("Album Name:    "+song.album.name);
-        //print artists
-        var artistArr = song.artists;
-        console.log("Artist(s): ");
-        artistArr.forEach(element => {
-            console.log("    "+element.name);
-        });
-        if(song.preview_url){
-            console.log("Preview Link:    "+ song.preview_url);
+        else {
+            returnStr += str[i];
         }
-        else{
-            console.log("Preview URL not available for this song.");
-        }
-    });
-}
-else if (process.argv[2] === "movie-this") {
-    var query = "https://www.omdbapi.com/?apikey=" + keys.omdb.id + "&t=";
-    if (process.argv[3] == undefined || process.argv[3] == "") {
-        query += "mr nobody";
     }
-    else {
-        query += process.argv[3];
-    }
-    request(query, function (err, response, body) {
-        if (err) {
-            return console.log(err);
-        }
-        var parsedBody = JSON.parse(body);
-        console.log("Title: "+parsedBody.Title);
-        console.log("Year: "+parsedBody.Year);
-        console.log("IMDB rating: "+parsedBody.Ratings[0].Value);   //imdb
-        console.log("Rotten Tomatoes rating: "+parsedBody.Ratings[1].Value);   //rotten tomatoes
-        console.log("Production Countries: "+parsedBody.Country);
-        console.log("Language: "+parsedBody.Language);
-        console.log("Plot: "+parsedBody.Plot);
-        console.log("Notable Actors: "+parsedBody.Actors);
-
-    })
-} else if (process.argv[2] === "do-what-it-says") {
-    console.log("time to log");
-} else {
-    console.log("Argument \" " + process.argv[2] + "\" not recognized.");
+    return returnStr;
 }
-/*
-bandsintown notes check out JSON.parse(body)
-*/
+inputManager(process.argv[2], process.argv[3]);
