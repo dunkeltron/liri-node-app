@@ -49,7 +49,6 @@ SPOTIFY_SECRET=your-spotify-secret
         * If the user wants to edit the search term they can edit 'random.txt'. However the format of the call in 'random.txt' must be command,"Search Term". See [example](./images/do-what-it-says-random-formatting.png) for clarification
         
         * Currently do-what-it-says only reads the first line of the file for inputs. Plans for multi line support are being held up by synchronicity issues in the function calls.
-## If you need more examples of how the program works check out the images folder ##
 
 # Example Screenshots #
 * [liri with no args](./images/command-line-no-args.png)
