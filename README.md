@@ -1,8 +1,8 @@
 # liri-node-app
 This program allows users to input specific command line arguments in order to search the internet for concert, movie, or spotify, information.
 
-###Getting Started###
-Before using the program the user must create a .env file with the following code in it.
+### Getting Started ###
+Before using the program the user must obtain a spotify ID and spotify secret ID.Then the user must create a .env file with the following code in it. (replace the text on the right of the equals sign with your information.)
 
 ```js
 # Spotify API keys
@@ -11,6 +11,7 @@ SPOTIFY_ID=your-spotify-id
 SPOTIFY_SECRET=your-spotify-secret
 
 ```
+
 * This .env file and the spotify keys are essential to running the spotify portion of the program. Without this file and those keys the spotify portion of the program will not work.
 
 * This program uses node modules so the user must have node installed on their device.
