@@ -20,11 +20,11 @@ SPOTIFY_SECRET=your-spotify-secret
 * The program uses the command line to take in arguments from the user. There are four accepted commands. 
 
     1. concert-this "Band Name" , this command uses the bandsintown events api to find and return any upcoming shows that "Band Name" may have.
-    * The function displays the list of the bands upcoming shows acording to the bandsintown api.
-    * For each show the function will output:
-        1. The venue name
-        1. the city and state (or city and country if city not in U.S.)
-        1. the date of the concert in (MM/DD/YYY format).
+        * The function displays the list of the bands upcoming shows acording to the bandsintown api.
+        * For each show the function will output:
+            1. The venue name
+            1. the city and state (or city and country if city not in U.S.)
+            1. the date of the concert in (MM/DD/YYY format).
 
     1. spotify-this-song "Song Name" , this command uses the node-spotify-api node package to search spotify for the desired song. This command will return the first result found by the api call only. 
         * The function displays:
