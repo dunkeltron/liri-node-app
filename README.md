@@ -50,3 +50,16 @@ SPOTIFY_SECRET=your-spotify-secret
         
         * Currently do-what-it-says only reads the first line of the file for inputs. Plans for multi line support are being held up by synchronicity issues in the function calls.
 ## If you need more examples of how the program works check out the images folder ##
+
+# Example Screenshots #
+* [liri with no args](./images/command-line-no-args.png)
+* [concert-this multiple results sample](./images/concert-this-multiple-results.png)
+* [do-what-it-says empty target file](./images/do-what-it-says-no-args.png)
+* [movie-this couldn't find movie](./images/movie-no-results.png)
+* [movie-this sample response](./images/movie-this-example.png)
+* [concert-this no upcoming concerts](./images/no-results-final.png)
+* [Improper command line call](./images/no-quotes.png)
+* [movie-this partial search](./images/partial-match-result.png)
+* [spotify-this-song no preview URL example](./images/spotify-example-no-previewURL.png)
+* [spotify-this-song with preview URL example](./images/spotify-example-previewURL.png)
+* [spotify-this-song no search term given](./images/spotify-no-search-term.png)

@@ -5,8 +5,8 @@ var fs = require("fs");
 const cols = 8;
 var moment = require("moment");
 
- var Spotify = require("node-spotify-api");
- var spotify = new Spotify(keys.spotify);
+var Spotify = require("node-spotify-api");
+var spotify = new Spotify(keys.spotify);
 function inputManager(str, str2) {
     if (str === "concert-this") {
         concertThis(str2);
