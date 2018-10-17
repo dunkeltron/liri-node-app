@@ -114,7 +114,14 @@ function concertThis(str) {
                     data.forEach(element => {
                         console.log();
                         console.log("Venue: " + (element.venue.name));
-                        console.log("City: " + element.venue.city);
+                        if(element.venue.region){                            
+                        console.log("City: " + element.venue.city+", "+element.venue.region);
+                        }
+                        else{
+                            
+                        console.log("City: " + element.venue.city+", "+element.venue.country);
+                        }
+                        
                         console.log("Date: " + moment(element.datetime).format("MM-DD-YYYY"));
                     });
 
